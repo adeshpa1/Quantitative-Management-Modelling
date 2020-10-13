@@ -1,0 +1,47 @@
+---
+title: "HeartStart"
+author: "Amruta Deshpande"
+date: "10/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading the library "lpSolveAPI"
+
+```{r}
+library(lpSolveAPI)
+```
+
+To read the  LP file.
+
+```{r}
+HeartStart_object <- read.lp("HeartStart.lp");
+HeartStart_object
+```
+
+To solve the LP.
+
+```{r}
+solve(HeartStart_object)
+```
+
+To compute the objective function value.
+
+```{r}
+get.objective(HeartStart_object)
+```
+
+To compute the values of decision variables.
+
+```{r}
+get.variables(HeartStart_object)
+```
+
+To compute the values of constraints.
+
+```{r}
+get.constraints(HeartStart_object)
+```
