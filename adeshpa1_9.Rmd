@@ -1,0 +1,107 @@
+---
+title: "Assignment_9"
+author: "Amruta Deshpande"
+date: "11/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Question:
+
+The Research and Development Division of the Emax Corporation has developed three new products. A decision now needs to be made on which mix of these products should be produced. Management wants primary consideration given to three factors: total profit, stability in the workforce, and achieving an increase in the company’s earnings next year from the $75 million achieved this year. In particular, using the units given in the following table, they want to
+
+Maximize Z = P - 6C - 3D, where 
+
+P = total (discounted) profit over the life of the new products,
+C = change (in either direction) in the current level of employment,
+D = decrease (if any) in next year’s earnings from the current year’s level.
+
+The amount of any increase in earnings does not enter into Z, because management is concerned primarily with just achieving some increase to keep the stockholders happy. (It has mixed feelings about a large increase that then would be difficult to surpass in subsequent years.)
+
+The impact of each of the new products (per unit rate of production) on each of these factors is shown in the table:
+ 
+
+1)	Define y1+ and y1-, respectively, as the amount over (if any) and the amount under (if any) the employment level goal. Define y2+ and y2- in the same way for the goal regarding earnings next year. Define x1, x2, and x3 as the production rates of Products 1, 2, and 3, respectively. With these definitions, use the goal programming technique to express y1+, y1- , y2+ and y2-  algebraically in terms of x1, x2, and x3. Also express P in terms of x1, x2, and x3.
+
+2)	Express management’s objective function in terms of x1, x2, x3, y1+, y1- , y2+ and y2-.
+
+3)	Formulate and solve the linear programming model. What are your findings?
+
+
+# Solution:
+
+Let the Xi = the new proucts.
+        i = 1, 2, 3.
+        
+        y1 = Amount of employment level goal
+        y1 = y1p - y1m
+        y1p = amount over employment level goal
+        y1m = amount under employment level goal.
+        
+        y2= earnings next year
+        y2p = earnings increase next year
+        y2m = earnings decrease next year
+        
+Hence,
+
+Max = P - 6C - 3D
+
+P = 20 x1 + 15 x2 + 25 x3
+C = y1p - y1m
+D = y2p - y1m
+
+but increase can be ignored 
+Thus, 
+D = y1m
+
+
+
+```{r}
+
+library(lpSolveAPI)
+emax <- read.lp("Emax.lp")
+solve(emax)
+get.objective(emax)
+get.constraints(emax)
+get.variables(emax)
+
+```
+
+Applying the simplex method we have achieved optimal solution with maximum profit as z = 225. Using the product x3 = 15 and x1 and x2 = 0, y1p = 25, y1m and y2m = 0. The employee is incresed by 25 in hundreds
+
+```{r}
+
+emax <- read.lp("Emax_FirstStage.lp")
+solve(emax)
+get.objective(emax)
+get.constraints(emax)
+get.variables(emax)
+
+```
+
+Our first goal with maximum profit is achieve with z = 250, product 3 choosen x3 = 10 and decrease in earning by 25.
+
+```{r}
+
+emax <- read.lp("Emax_SecondStage.lp")
+solve(emax)
+get.objective(emax)
+get.constraints(emax)
+get.variables(emax)
+
+```
+Our next goal of maximum profit z = 208.33, x2 = 8.3333, x3 = 3.3333 and no employee level change. 
+
+```{r}
+
+emax <- read.lp("Emax_Streamline.lp")
+solve(emax)
+get.objective(emax)
+get.constraints(emax)
+get.variables(emax)
+
+```
+
+Hence the total maximum profit earned will be 291.6667 million dollors. the product 3 is choosen with 11.666667 hundreads of units with increase in employment goal leavel with 8.33333 hundreads of employee and decrease of earning by 16.66667. 
