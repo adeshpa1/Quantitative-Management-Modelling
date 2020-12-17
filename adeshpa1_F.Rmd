@@ -1,0 +1,156 @@
+---
+title: "adeshpa_F"
+author: "Amruta Deshpande"
+date: "12/16/2020"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+
+
+# Problem statement:
+
+Objective: Form Groups
+
+Assume, a class consists of 12 students, and you would like to form 4 groups of 3 students each.Pimary objective is to maximize the chance that each group will do well on a class project. 
+
+Below are the requirements to form groups:
+
+1. Each group should have exactly 3 students
+
+2. The objective is to maximize the chance of success for each group on a class project
+
+
+The problem is to form  4 groups of 12 students to maximize the chance of success for each group on a class project in quantitative modeling class.
+
+
+
+# Solution:
+
+The Capstone class has 12 students, Professor wants to divide the class in 4 groups, with 3 students in each group. While forming the group, professor wants the success rate of each group be same. The professor wants to consider three factors while forming the group. 
+
+The three elements that affect the success of the group in the project :
+
+1) GPA of the student
+2) Machine Learning understanding
+3) Vizualization skills
+
+
+As Capstone is the last course in MSBA syllabus, professor has considered specific technical skills. The data for GPA has been collected from the students, while the data for technical skills is collected from the respective professor. The Machine learning and visualization skills have equal weightage but more weightage than the GPA. Hence, the 'Total' indicates the score for each student on which the students can be divided. 
+
+The three pillars on which this project can be built is based on the reviewed data of the students. GPA variable indicates the GPA of the students till date. As this project is undertaken by students majoring in Business analytics, it is expected that students have basic knowledge of Machine Learning, and hence it has been considered. In every project as much as technical skills are necessary, visualization is also important. Hence, these factors were considered and data was collected accordingly. The GPA can be measured but to measure technical skills (Visualization skills and Machine Learning understanding), professor has rated every student on the below range scale, 
+
+a) Poor:         1
+b) Adequate:     2
+c) Good:         3
+d) Excellent:    4
+
+
+* Data Presentation :
+
+```{r}
+#Loading Libraries
+
+library(lpSolveAPI)
+
+library(dplyr)
+
+```
+
+```{r}
+# Data is in .csv form, hence reading the file,
+
+Students <- read.csv("Students_F.csv")
+
+Students
+
+```
+
+
+* Formulation of the problem :
+
+To solve the above problem, we are using integer programming. 
+
+
+* Decision Variables :
+
+A decision variable is a quantity that the decision-maker controls. In this example, 12 students are assigned to groups. 
+
+xij
+
+where, 
+i= number of students
+j= group number (1,2,3,4)
+
+
+$$
+x_{11},~x_{12},~x_{13},...,~x_{ij},~~~~~~~~~~~where~i ={1, 2, 3,...12}~and~j = 1, 2,3,4
+$$
+
+
+
+* Objective Function :
+
+
+The objective function here is to maximize each group success.
+
+If,
+xij = 1 is the student i belongs to group j, and 0 if not.
+
+
+$$
+79.5\sum_{j=1}^{4}x_{i1}+ 92\sum_{j=1}^{4}x_{i1}+ 72.4\sum_{j=1}^{4}x_{i1}+ 59.1\sum_{j=1}^{4}x_{i1}+ 85.3\sum_{j=1}^{4}x_{i1}+ 95\sum_{j=1}^{4}x_{i1}+62.3\sum_{j=1}^{4}x_{i1}+ 82.1\sum_{j=1}^{4}x_{i1}+ 87\sum_{j=1}^{4}x_{i1}+ 91.6\sum_{j=1}^{4}x_{i1}+ 53.7\sum_{j=1}^{4}x_{i1}+ 65.8\sum_{j=1}^{4}x_{i1}
+$$
+
+
+* Constraints
+
+
+Constraints are something that limits or restricts. Here there are two constraints:
+
+1) There should be 4 groups and each group should have 3 members ONLY.
+
+2) Each member can only be part of one group. 
+
+
+
+```{r}
+
+#Importing lp file
+
+students_group <- read.lp("Students_group.lp")
+
+students_group
+
+#Solving the optimal solution
+
+solve(students_group)
+
+#getting the objective function
+
+get.objective(students_group)
+
+#getting variables
+
+Group <- get.variables(students_group)
+
+Group
+
+df <- as.data.frame(matrix(Group, nrow = 12, ncol= 4)) %>%
+ rename(Group1= V1, Group2=V2, Group3=V3, Group4=V4)
+df
+
+Group_number <-  c(3,1,3,4,2,1,4,2,2,1,4,3)
+
+# Binding Group numbers with the data
+
+Result <- cbind(Students , Group_number)
+
+Result
+
+```
+* Conclusion :
+
+Hence, the group are assigned for every student according to our objective of maximization of success rate. Group 1 contains student number : 2,6,10; while Group 2 contains students : 5,8,9; Group 3 has students : 1,3,12 and Group 4 has students : 4,7,11. The dividation done is such that, success rate for each group is high. For instance, Group 3, it has students 1, 3 and 12. Student 1 has good scores while 3 and 12 are moderate. And thus, the success rate of this group is good. 
